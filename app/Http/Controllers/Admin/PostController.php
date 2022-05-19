@@ -5,9 +5,21 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Post;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class PostController extends Controller
 {
+    private function getValidators($model) {
+        return [
+            'title'     => 'required|max:100',
+            'slug' => [
+                'required',
+                Rule::unique('posts')->ignore($model),
+                'max:100'
+            ],
+            'content'   => 'required'
+        ];
+    }
     /**
      * Display a listing of the resource.
      *
@@ -27,7 +39,7 @@ class PostController extends Controller
      */
     public function create()
     {
-        //
+        return view ('admin.posts.create')
     }
 
     /**
@@ -38,7 +50,11 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate($this->getValidators(null));
+        
+        $newPost = Post::create($request->all());
+
+        return redirect()->route('admin.posts.show', $newPost->id);//da modificare con slug dopo aver inserito la funzione.
     }
 
     /**
@@ -60,7 +76,7 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        //
+        return view('admin.posts.edit', compact('post'));
     }
 
     /**
@@ -72,7 +88,11 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
-        //
+        $request->validate($this->validators(null));
+        
+        $post->update($request->all());
+
+        return redirect()->route('admin.posts.show', $post->id);
     }
 
     /**
@@ -83,6 +103,8 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        //
+        $post->delete();
+
+        return redirect()->route('admin.posts.index');
     }
 }

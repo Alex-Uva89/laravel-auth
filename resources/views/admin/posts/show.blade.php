@@ -12,11 +12,14 @@
                 <div class="cont-info">
                     <h1>{{ $post->title }}</h1>
                 </div>
+                <div class="cont-info">
+                    <h1>{{ $post->content }}</h1>
+                </div>
             </div>
             <div class="d-flex justify-content-center gap-2">
-                <a href="{{ route('admin.posts.edit', $post->id) }}" class="btn btn-primary">Modifica post</a>
+                <a href="{{ route('admin.posts.edit', $post->slug) }}" class="btn btn-primary">Modifica post</a>
     
-                <form class="d-inline" action="{{ route('admin.posts.destroy' , $post->id) }}" onclick="return confirm('Sei sicuro di voler cancellare questo Albo?')" method="POST">
+                <form class="d-inline" action="{{ route('admin.posts.destroy' , $post->slug) }}" onclick="return confirm('Sei sicuro di voler cancellare questo Albo?')" method="POST">
                     @csrf
                     @method('DELETE')
                     <button type="submit" class="btn btn-danger">Delete this post</button>
